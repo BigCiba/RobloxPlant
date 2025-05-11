@@ -1,30 +1,34 @@
 import { Players } from "@rbxts/services";
 import { NetData } from "./net_data";
-import { Event } from "shared/event";
+import { Signal } from "shared/helper/signal";
+import { Gui } from "./gui";
+import { FormatTime } from "shared/helper/localization";
+import { ipcClient } from '@rbxts/abstractify';
+import { Event } from "./event";
 
 export class SeedShop {
+	static gui: Gui;
 	static Init() {
-		NetData.ListenNetData("SeedShop", (data: SeedShopItem[]) => {
+		const restockTime = new Signal(300);
+		NetData.ListenNetData("SeedShop", (data) => {
 			SeedShop.RestockShop();
 		}, Players.LocalPlayer);
-		const playerGui = Players.LocalPlayer.FindFirstChildOfClass("PlayerGui");
-		if (playerGui === undefined) {
-			warn("PlayerGui not found");
-			return;
-		}
-		const CloseButton = playerGui.WaitForChild("SeedShop2").FindFirstChild("CloseButton", true) as TextButton;
-		const RestockButton = playerGui.WaitForChild("SeedShop2").FindFirstChild("RestockButton", true) as ImageButton;
-		const CD = playerGui.WaitForChild("SeedShop2").FindFirstChild("CD", true) as TextLabel;
-		const SeedInfo = playerGui.WaitForChild("SeedShop2").FindFirstChild("SeedInfo", true) as ScrollingFrame;
-		const CloneUI1 = playerGui.WaitForChild("SeedShop2").FindFirstChild("CloneUI1", true) as CloneUI1;
-		const CloneUI2 = playerGui.WaitForChild("SeedShop2").FindFirstChild("CloneUI2", true) as Frame;
+		NetData.ListenNetData("SeedShopRestock", (data) => {
+			restockTime.Set(data.time);
+		});
+		SeedShop.gui = new Gui("SeedShop2");
+		SeedShop.gui.BindText(restockTime, "CD", (v) => "New seeds in " + FormatTime(v));
+
+		const CloneUI1 = SeedShop.gui.GetNode<CloneUI1>("CloneUI1");
+		const CloneUI2 = SeedShop.gui.GetNode<Frame>("CloneUI2");
 		CloneUI1.Visible = false;
 		CloneUI2.Visible = false;
-		CloseButton.Activated.Connect(() => {
-			Event.FireServer("CloseShop", {});
+
+		SeedShop.gui.BindButtonEvent("CloseButton", () => {
+			Event.Emit('CloseShop');
 		});
-		RestockButton.Activated.Connect(() => {
-			Event.FireServer("RestockShop", {});
+		SeedShop.gui.BindButtonEvent("RestockButton", () => {
+			Event.Emit("RestockShop");
 		});
 		SeedShop.RestockShop();
 	}
@@ -35,8 +39,8 @@ export class SeedShop {
 			warn("PlayerGui not found");
 			return;
 		}
-		const SeedInfo = playerGui.WaitForChild("SeedShop2").FindFirstChild("SeedInfo", true) as ScrollingFrame;
-		const CloneUI1 = playerGui.WaitForChild("SeedShop2").FindFirstChild("CloneUI1", true) as CloneUI1;
+		const SeedInfo = SeedShop.gui.GetNode<ScrollingFrame>("SeedInfo");
+		const CloneUI1 = SeedShop.gui.GetNode<CloneUI1>("CloneUI1");
 		SeedInfo.GetChildren().forEach((child) => {
 			if (child.Name !== "CloneUI1" && child.Name !== "CloneUI2" && child.Name !== "UIListLayout") {
 				child.Destroy();
@@ -51,6 +55,10 @@ export class SeedShop {
 			clone.SeedStockPrice.Text = tostring(v.price);
 			clone.Parent = SeedInfo;
 			clone.Visible = true;
+			clone.Activated.Connect(() => {
+				// 购买种子
+				Event.Emit("BuySeed", { index: i });
+			});
 		}
 	}
 }

@@ -19,14 +19,20 @@ Players.LocalPlayer.AttributeChanged.Connect((key: string) => {
 export class NetData {
 	static callbackList: Record<string, ((data: any) => void)[]> = {};
 	static playerCallbackList: Record<string, ((data: any) => void)[]> = {};
-	static GetNetData(key: string, player?: Player) {
+	static GetNetData<
+		K extends keyof NetDataDeclare,
+		T extends NetDataDeclare[K],
+	>(key: K, player?: Player): T {
 		if (player) {
-			return HttpService.JSONDecode(player.GetAttribute(key) as string);
+			return HttpService.JSONDecode(player.GetAttribute(key) as string) as T;
 		} else {
-			return HttpService.JSONDecode(NetDataInstance.GetAttribute(key) as string);
+			return HttpService.JSONDecode(NetDataInstance.GetAttribute(key) as string) as T;
 		}
 	}
-	static ListenNetData(key: string, callback: (data: any) => void, player?: Player) {
+	static ListenNetData<
+		K extends keyof NetDataDeclare,
+		T extends NetDataDeclare[K],
+	>(key: K, callback: (data: T) => void, player?: Player) {
 		if (player) {
 			if (NetData.playerCallbackList[key] === undefined) {
 				NetData.playerCallbackList[key] = [];

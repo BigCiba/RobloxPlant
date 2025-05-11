@@ -8,12 +8,24 @@ importers:
 
   .:
     devDependencies:
+      '@rbxts/abstractify':
+        specifier: ^1.1.5
+        version: 1.1.5
+      '@rbxts/altmake':
+        specifier: ^0.1.5
+        version: 0.1.5
+      '@rbxts/array-utils':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@rbxts/compiler-types':
         specifier: 3.0.0-types.0
         version: 3.0.0-types.0
       '@rbxts/services':
         specifier: ^1.5.5
         version: 1.5.5
+      '@rbxts/string-utils':
+        specifier: ^1.0.3
+        version: 1.0.3
       '@rbxts/types':
         specifier: ^1.0.849
         version: 1.0.849
@@ -26,11 +38,23 @@ importers:
 
 packages:
 
+  '@rbxts/abstractify@1.1.5':
+    resolution: {integrity: sha512-AFAadLgp5LgtWV2F35y5B34oPchUvIs5p18zoCc9336yC/TnzQU/mINeKIvQvyFPkh+ptvNwsG/w9diNUyjP2w==}
+
+  '@rbxts/altmake@0.1.5':
+    resolution: {integrity: sha512-hUgwB5BciLTbXIet98nPZcXugrsFjGuJojMQF0kHX/jqqOdNc15zllTOyzk7FUuOQAg+ECjVw/hERfM/VZe5Tw==}
+
+  '@rbxts/array-utils@1.0.2':
+    resolution: {integrity: sha512-05KdZTPp0J4IeBj7g+0mdBkbHiCRHNejoAhOjEankaEhOeWOBLCSzBE0oIcLujjnh+6+Du9inPQ7Z09jRg7DNQ==}
+
   '@rbxts/compiler-types@3.0.0-types.0':
     resolution: {integrity: sha512-VGOHJPoL7+56NTatMGqQj3K7xWuzEV+aP4QD5vZiHu+bcff3kiTmtoadaF6NkJrmwfFAvbsd4Dg764ZjWNceag==}
 
   '@rbxts/services@1.5.5':
     resolution: {integrity: sha512-Hu7QH2ecefS60zpakKG3T2vgABydoOJqpSG7nXr59wFAbPk/cA+OcsntYPHUWyHAat0VFGZ5jNZLTLdiqfssvg==}
+
+  '@rbxts/string-utils@1.0.3':
+    resolution: {integrity: sha512-nsZsPdGsrsBdwLg7qQ5RGHoVhfvK+U3GvZ/6S+7KufqaFrbHWk2lufESob/C3xYf5sAeXgTJKWUnDJknYBGTIQ==}
 
   '@rbxts/types@1.0.849':
     resolution: {integrity: sha512-8T7fxRTOMIDOJ8bKnCpcjvmNAeUpPsfUATezb2SFbTba1lfpp7U9hSHdzsOMFxF+1I8hp1xZg7Nm5yA5O+hBjA==}
@@ -240,9 +264,19 @@ packages:
 
 snapshots:
 
+  '@rbxts/abstractify@1.1.5':
+    dependencies:
+      '@rbxts/services': 1.5.5
+
+  '@rbxts/altmake@0.1.5': {}
+
+  '@rbxts/array-utils@1.0.2': {}
+
   '@rbxts/compiler-types@3.0.0-types.0': {}
 
   '@rbxts/services@1.5.5': {}
+
+  '@rbxts/string-utils@1.0.3': {}
 
   '@rbxts/types@1.0.849': {}
 

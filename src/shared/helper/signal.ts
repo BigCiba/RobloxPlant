@@ -13,7 +13,7 @@ export class Signal<T> {
 			this.Notify();
 		}
 	}
-	Connect(subscriber: () => void) {
+	Connect(subscriber: (v: T) => void) {
 		this._subscribers.push(subscriber);
 		return {
 			Disconnect: () => {
@@ -28,11 +28,5 @@ export class Signal<T> {
 		for (const subscriber of this._subscribers) {
 			task.spawn(subscriber, this._value);
 		}
-	}
-	Bind(element: T) {
-		element = this._value;
-		this.Connect(() => {
-			element = this._value;
-		});
 	}
 }

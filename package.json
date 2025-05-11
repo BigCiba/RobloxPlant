@@ -1,5 +1,5 @@
 {
-  "name": "RobloxPlant",
+  "name": "roblox_plant",
   "version": "1.0.0",
   "description": "",
   "author": "bigciba <584665414@qq.com>",
@@ -12,10 +12,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
+    "@rbxts/abstractify": "^1.1.5",
+    "@rbxts/altmake": "^0.1.5",
     "@rbxts/compiler-types": "3.0.0-types.0",
+    "@rbxts/services": "^1.5.5",
     "@rbxts/types": "^1.0.849",
     "roblox-ts": "^3.0.0",
     "typescript": "^5.8.3",
-    "@rbxts/services": "^1.5.5"
+    "@rbxts/array-utils": "^1.0.2",
+    "@rbxts/string-utils": "^1.0.3"
   }
 }
