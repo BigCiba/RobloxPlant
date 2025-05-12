@@ -24,7 +24,7 @@ lualib.RemapValClamped = function(v, a, b, c, d)
         return v >= b and d or c
     end
     local t = (v - a) / (b - a)
-    t = Clamp(t, 0, 1)
+    t = lualib.Clamp(t, 0, 1)
     return c + (d - c) * t
 end
 --- 四舍五入，s为小数点几位
@@ -50,11 +50,11 @@ lualib.Deepcopy = function(orig)
     if type(orig) == "table" then
         copy = {}
         for key, value in pairs(orig) do
-            copy[Deepcopy(key)] = Deepcopy(value)
+            copy[lualib.Deepcopy(key)] = lualib.Deepcopy(value)
         end
         setmetatable(
             copy,
-            Deepcopy(getmetatable(orig))
+            lualib.Deepcopy(getmetatable(orig))
         )
     else
         copy = orig

@@ -6,4 +6,5 @@ interface RemoteEventDeclare {
 interface BindableEventDeclare {
 	PlayerAdded: [Player];
 	PlayerRemoving: [Player];
+	OpenBackpack: [];
 }

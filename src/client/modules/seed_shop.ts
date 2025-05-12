@@ -25,7 +25,7 @@ export class SeedShop {
 		CloneUI2.Visible = false;
 
 		SeedShop.gui.BindButtonEvent("CloseButton", () => {
-			Event.Emit('CloseShop');
+			SeedShop.CloseSeedShop();
 		});
 		SeedShop.gui.BindButtonEvent("RestockButton", () => {
 			Event.Emit("RestockShop");
@@ -60,6 +60,12 @@ export class SeedShop {
 				Event.Emit("BuySeed", { index: i });
 			});
 		}
+	}
+	static OpenSeedShop() {
+		SeedShop.gui.screenGui.Enabled = true;
+	}
+	static CloseSeedShop() {
+		SeedShop.gui.screenGui.Enabled = false;
 	}
 }
 

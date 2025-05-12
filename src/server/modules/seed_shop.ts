@@ -5,14 +5,12 @@ import { PlayerData } from "server/modules/player_data";
 import { Event } from "./event";
 import { GameData } from "shared/modules/game_data";
 import { CWeightPool } from "shared/class/weight_pool";
+import { RemapValClamped, Round } from "shared/helper/lualib";
 
 export class SeedShop {
 	static SeedShopList: Record<number, SeedShopItem[]> = {};
 	static restockTime: number = 300;
 	static Init() {
-		Event.On("CloseShop", (player) => {
-			SeedShop.CloseSeedShop(player);
-		});
 		Event.On("RestockShop", (player) => {
 			SeedShop.RestockShop(player);
 		});
@@ -33,10 +31,19 @@ export class SeedShop {
 		const SeedData = GameData.GetGameData("SeedShop");
 		for (const [k, v] of pairs(SeedData)) {
 			const pool = new CWeightPool({});
-			v.Stock.split(";").map(v => {
+			const res = v.Stock.split(";").map(v => {
 				const [value, weight] = v.split(",");
-				pool.set(value, tonumber(weight) as number);
+				return [value, weight];
 			});
+			const minValue = tonumber(res[0][0]) as number;
+			const minWeight = tonumber(res[0][1]) as number;
+			const maxValue = tonumber(res[1][0]) as number;
+			const maxWeight = tonumber(res[1][1]) as number;
+
+			for (let i = minValue; i <= maxValue; i++) {
+				pool.set(tostring(i), Round(RemapValClamped(i, minValue, maxValue, minWeight, maxWeight)));
+			}
+
 			SeedShop.SeedShopList[player.UserId].push({
 				name: v.SeedName,
 				price: v.CoinsPrice,
@@ -48,22 +55,6 @@ export class SeedShop {
 		SeedShop.restockTime = 300;
 		NetData.SetNetData("SeedShopRestock", { time: SeedShop.restockTime });
 		NetData.SetNetData("SeedShop", SeedShop.SeedShopList[player.UserId], player);
-	}
-	static OpenSeedShop(player: Player) {
-		const playerGui = player.FindFirstChildOfClass("PlayerGui");
-		if (playerGui === undefined) {
-			warn("PlayerGui not found");
-			return;
-		}
-		playerGui.SeedShop2.Enabled = true;
-	}
-	static CloseSeedShop(player: Player) {
-		const playerGui = player.FindFirstChildOfClass("PlayerGui");
-		if (playerGui === undefined) {
-			warn("PlayerGui not found");
-			return;
-		}
-		playerGui.SeedShop2.Enabled = false;
 	}
 	static BuySeed(player: Player, data: { index: number; }) {
 		const shopInfo = SeedShop.SeedShopList[player.UserId];
